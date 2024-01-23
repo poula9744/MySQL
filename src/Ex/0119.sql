@@ -144,3 +144,28 @@ select first_name,
 	   salary
 from employees
 where salary in (2100, 3100, 4100, 5100);
+
+
+-- like
+select first_name,
+	   last_name,
+       salary
+from employees
+where fist_name like 'L%';
+
+# 이름에 am 을 포함한 사원의 이름과 월급을 출력하세요
+select first_name,
+	   last_name,
+       salary
+from employees
+where fist_name like '%am%';	
+# 이름의 두번째 글자가 a 인 사원의 이름과 월급을 출력하세요
+select first_name,
+	   last_name,
+       salary
+from employees
+where first_name like '_a%';
+
+
+# 이름의 네번째 글자가 a 인 사원의 이름을 출력하세요
+# 이름이 4글자인 사원중 끝에서 두번째 글자가 a인 사원의 이름을 출력하세요
