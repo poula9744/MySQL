@@ -9,7 +9,7 @@ select max(salary) 최고임금
 from employees;
 
 -- 문제3. 
-select max(hire_date)
+select date_format(max(hire_date), '%Y년 %m월 %d일') '마지막으로 신입사원이 들어온 날'
 from employees;
 
 
@@ -72,3 +72,6 @@ select hire_date,
 from employees;
 
 -- 문제11. 
+ select date_format(min(hire_date), '%Y년 %m월 %d일(%W)') '가장 오래 근속한 직원의 입사일'
+from employees;
+
