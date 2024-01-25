@@ -1,5 +1,5 @@
 -- ----------------------
-#    left outer join   #
+#        left outer join         #
 -- ----------------------
 
 select count(*) 
@@ -15,7 +15,7 @@ left outer join departments d
 ;
 
 -- ----------------------
-#   right outer join   #
+#        right outer join        #
 -- ----------------------
 select count(*)
 from employees e
