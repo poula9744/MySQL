@@ -72,15 +72,15 @@ select hire_date,
 from employees;
 
 -- 문제11. 
- select  date_format(min(hire_date), '%Y년 %m월 %d일') '가장 오래 근속한 직원의 입사일',
-			 CASE when date_format(min(hire_date), '%a') = 'Mon' then '(월요일)'
-					   when date_format(min(hire_date), '%a') = 'Tue' then '(화요일)'
-                       when date_format(min(hire_date), '%a') = 'Wen' then '(수요일)'
-                       when date_format(min(hire_date), '%a') = 'Thu' then '(목요일)'
-                       when date_format(min(hire_date), '%a') = 'Fri' then '(금요일)'
-                       when date_format(min(hire_date), '%a') = 'Sat' then '(토요일)'
-					   else '일요일'
-             END days
+ select  
+			 CASE when date_format(min(hire_date), '%a') = 'Mon' then date_format(min(hire_date), '%Y년 %m월 %d일(월요일)')
+					   when date_format(min(hire_date), '%a') = 'Tue' then date_format(min(hire_date), '%Y년 %m월 %d일(화요일)')
+                       when date_format(min(hire_date), '%a') = 'Wen' then date_format(min(hire_date), '%Y년 %m월 %d일 (수요일)')
+                       when date_format(min(hire_date), '%a') = 'Thu' then date_format(min(hire_date), '%Y년 %m월 %d일 (목요일)')
+                       when date_format(min(hire_date), '%a') = 'Fri' then date_format(min(hire_date), '%Y년 %m월 %d일 (금요일)')
+                       when date_format(min(hire_date), '%a') = 'Sat' then date_format(min(hire_date), '%Y년 %m월 %d일 (토요일)')
+					   else date_format(min(hire_date), '%Y년 %m월 %d일 (일요일)')
+             END '가장 오래 근속한 직원의 입사일'
 from employees;
 
 # case ~ end 로 영어 --> 한글로 바꿈
