@@ -26,3 +26,5 @@ create database book_db
 use book_db;
 show databases;
 -- drop database book_db;
+
+GRANT EXECUTE ON s.round TO 'hr'@'%';

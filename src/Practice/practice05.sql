@@ -111,13 +111,62 @@ limit 0,2
 /*문제7.
 평균월급(salary)이 가장 높은 부서 직원들의 직원번호(employee_id), 이름(firt_name), 성
 (last_name)과 업무(job_title), 월급(salary)을 조회하시오. */
-select e.employee_id
-		    ,first_name
-            ,last_name
-            ,job_title
-            ,s.salary
-            ,avg(salary)
-from employees e, jobs j
-where e.job_id = j.job_id
-group by employee_id ,first_name ,last_name,job_title ,salary
-;									  
+
+select e.employee_id 사번
+            ,last_name 성
+            ,first_name  이름
+            ,job_title 업무명
+            ,e.salary 월급
+            ,s.salary 부서평균월급
+from employees e
+join jobs j 
+	on e.job_id = j.job_id
+join (select department_id, max(avg_salary) salary 
+from (select d.department_id,
+			avg(salary) avg_salary
+			from departments d, employees ee
+            where d.department_id = ee.department_id
+			group by department_id) ss
+            group by department_id) s
+	on e.department_id = s.department_id
+    
+limit 0,3
+;
+
+# 평균월급(salary)이 가장 높은 부서
+select max(avg_salary) salary 
+from (select d.department_id,
+			avg(salary) avg_salary
+			from departments d, employees ee
+            where d.department_id = ee.department_id
+			group by department_id) ss
+	;
+    
+
+/* 문제8. ?????????????
+평균 월급(salary)이 가장 높은 부서명과 월급은? (limt사용하지 말고 그룹함수 사용할 것) */
+
+select department_name
+			,max(avg_salary)
+from employees e, departments d, (select d.department_id,
+																	avg(salary) avg_salary
+														from departments d, employees ee
+														where d.department_id = ee.department_id
+														group by department_id) s
+where e.department_id = d.department_id
+and e.department_id = s.department_id
+group by department_name
+limit 0, 1;
+
+select department_name
+			,s.salary
+from employees e, departments d, (select department_id, max(avg_salary) salary 
+                                                          from (select d.department_id,
+			                                                                      avg(salary) avg_salary
+			                                                         from departments d, employees ee
+																	where d.department_id = ee.department_id
+																	group by department_id) ss
+																	group by department_id) s
+where e.department_id = d.department_id
+and e.department_id = s.department_id
+;
