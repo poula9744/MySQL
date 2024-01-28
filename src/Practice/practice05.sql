@@ -133,21 +133,38 @@ from (select d.department_id,
 limit 0,3
 ;
 
-# 평균월급(salary)이 가장 높은 부서
-select max(avg_salary) salary 
-from (select d.department_id,
+select e.employee_id 사번
+            ,last_name 성
+            ,first_name  이름
+            ,job_title 업무명
+            ,e.salary 월급
+            ,s.salary 부서평균월급
+from employees e
+join jobs j 
+	on e.job_id = j.job_id
+join (select department_id, max(avg_salary) salary 
+from (select department_id,
 			avg(salary) avg_salary
-			from departments d, employees ee
-            where d.department_id = ee.department_id
+			from employees 
 			group by department_id) ss
-	;
-    
+            group by department_id) s
+	on e.department_id = s.department_id;
 
-/* 문제8. ?????????????
+# 평균월급(salary)이 가장 높은 부서
+select department_id, s.salary
+from(select max(avg_salary) salary 
+from (select department_id,
+				      avg(salary) avg_salary
+			from employees 
+			group by department_id) ss)s
+;
+
+
+/* 문제8. 
 평균 월급(salary)이 가장 높은 부서명과 월급은? (limt사용하지 말고 그룹함수 사용할 것) */
 
 select department_name
-			,max(avg_salary)
+			,max(avg_salary) avg_salary
 from employees e, departments d, (select d.department_id,
 																	avg(salary) avg_salary
 														from departments d, employees ee
@@ -158,15 +175,93 @@ and e.department_id = s.department_id
 group by department_name
 limit 0, 1;
 
+
 select department_name
-			,s.salary
-from employees e, departments d, (select department_id, max(avg_salary) salary 
-                                                          from (select d.department_id,
+			,s.salary avg_salary
+from employees e, departments d, (select max(avg_salary) salary 
+                                                          from (select department_id,
 			                                                                      avg(salary) avg_salary
-			                                                         from departments d, employees ee
-																	where d.department_id = ee.department_id
+			                                                         from employees 
 																	group by department_id) ss
-																	group by department_id) s
+                                                                    ) s
 where e.department_id = d.department_id
-and e.department_id = s.department_id
+and e.salary > s.salary
 ;
+
+
+select department_name
+			,q.salary
+from employees e, departments d, (select max(avg_salary) salary 
+                                                               from (select department_id,
+			                                                                      avg(salary) avg_salary
+			                                                                from employees 
+																			group by department_id) ss
+                                                                  ) s
+                                                                    ,(select department_id,
+			                                                                      avg(salary) salary
+			                                                           from employees 
+																	   group by department_id) q
+where e.department_id = d.department_id
+and d.department_id = q.department_id
+and q.salary = s.salary
+;
+
+/* 문제9.
+평균 월급(salary)이 가장 높은 지역과 평균월급은? */
+
+select region_id, max(avg_salary) salary 
+from (select r.region_id
+			          ,avg(salary) avg_salary
+			from regions r, employees e, countries c, locations l, departments d
+            where r.region_id = c.region_id
+            and c.country_id = l.country_id
+            and l.location_id = d.location_id
+            and d.department_id = e.department_id
+			group by r.region_id) ss
+            group by region_id
+;
+
+ select r.region_name
+		     ,s.salary
+from regions r
+join (select region_id, region_name, max(avg_salary) salary 
+		  from (select r.region_id
+								   ,region_name
+								   ,avg(salary) avg_salary
+					  from regions r, employees e, countries c, locations l, departments d
+					  where r.region_id = c.region_id
+                      and c.country_id = l.country_id
+                      and l.location_id = d.location_id
+                      and d.department_id = e.department_id
+					  group by r.region_id, region_name) ss
+            group by region_id, region_name) s
+	on r.region_name = s.region_name
+    limit 0,1
+;
+
+/* 문제 10.
+평균 월급(salary)이 가장 높은 업무와 평균월급은? (limt사용하지 말고 그룹함수 사용할 것 */
+select job_title
+            ,avg(e.salary) salary
+from employees e
+join  jobs j
+	on e.job_id = j.job_id
+join (select max(avg_salary) salary
+          from (select job_id, avg(salary) avg_salary
+					  from employees 
+		   group by job_id) ss ) s
+	on e.salary  = s.salary
+group by job_title
+;
+
+
+select max(salary) avg_salary
+from (select job_id, avg(salary) salary
+from employees 
+group by job_id) s
+;
+
+
+
+
+
