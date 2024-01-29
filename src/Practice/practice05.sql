@@ -206,20 +206,11 @@ and d.department_id = q.department_id
 and q.salary = s.salary
 ;
 
+
+
 /* 문제9.
 평균 월급(salary)이 가장 높은 지역과 평균월급은? */
 
-select region_id, max(avg_salary) salary 
-from (select r.region_id
-			          ,avg(salary) avg_salary
-			from regions r, employees e, countries c, locations l, departments d
-            where r.region_id = c.region_id
-            and c.country_id = l.country_id
-            and l.location_id = d.location_id
-            and d.department_id = e.department_id
-			group by r.region_id) ss
-            group by region_id
-;
 
  select r.region_name
 		     ,s.salary
