@@ -159,6 +159,25 @@ from (select department_id,
 			group by department_id) ss)s
 ;
 
+#소리언니 코드
+select e.employee_id 사번,
+			 e.first_name 성,
+             e.last_name 이름,
+             j.job_title 업무명,
+             salary 월급, 
+             s.avgs 부서평균월급,
+             e.department_id 부서아이디
+from employees e, jobs j, (select d.department_id, avg(e.salary) avgs
+										          from employees e, departments d, (select avg(salary) avgs
+																													  from employees
+																													  group by department_id) s
+											     where e.department_id = d.department_id
+                                                 group by d.department_id
+												 having avg(e.salary) >= max(s.avgS)) s 
+where e.department_id = s.department_id
+	and e.job_id = j.job_id
+;
+
 
 /* 문제8. 
 평균 월급(salary)이 가장 높은 부서명과 월급은? (limt사용하지 말고 그룹함수 사용할 것) */
